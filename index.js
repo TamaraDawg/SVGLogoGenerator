@@ -38,9 +38,15 @@ class Square extends Shape {
 
 
 function createLogoFile(svgContent) {
-  fs.writeFileSync('logo.svg', svgContent);
+  const svgString = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+    <svg xmlns="http://www.w3.org/2000/svg" width="300" height="200">
+      ${svgContent}
+    </svg>`;
+
+  fs.writeFileSync('logo.svg', svgString);
   console.log('Generated logo.svg');
 }
+
 
 async function promptUser() {
   const { text, textColor, shape, shapeColor } = await inquirer.prompt([
