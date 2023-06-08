@@ -2,40 +2,56 @@
 const inquirer = require('inquirer');
 const fs = require('fs');
 
-console.log('hello, code started');
-
 class Shape {
   constructor() {
     this.color = 'black';
+    this.text = '';
+    this.textColor = 'black';
   }
 
   setColor(color) {
     this.color = color;
   }
 
+  setText(text) {
+    this.text = text;
+  }
+
+  setTextColor(textColor) {
+    this.textColor = textColor;
+  }
+
   render() {
-    return '';
+    return ''; // Default implementation, override in child classes
   }
 }
 
 class Triangle extends Shape {
   render() {
-    return `<polygon points="150, 18 244, 182 56, 182" fill="${this.color}" />`;
+    return `
+      <polygon points="150, 18 244, 182 56, 182" fill="${this.color}" />
+      <text x="150" y="100" fill="${this.textColor}" text-anchor="middle">${this.text}</text>
+    `;
   }
 }
 
 class Circle extends Shape {
   render() {
-    return `<circle cx="100" cy="100" r="80" fill="${this.color}" />`;
+    return `
+      <circle cx="100" cy="100" r="80" fill="${this.color}" />
+      <text x="100" y="100" fill="${this.textColor}" text-anchor="middle" alignment-baseline="central">${this.text}</text>
+    `;
   }
 }
 
 class Square extends Shape {
   render() {
-    return `<rect x="50" y="50" width="200" height="200" fill="${this.color}" />`;
+    return `
+      <rect x="50" y="50" width="200" height="200" fill="${this.color}" />
+      <text x="150" y="150" fill="${this.textColor}" text-anchor="middle" alignment-baseline="central">${this.text}</text>
+    `;
   }
 }
-
 
 function createLogoFile(svgContent) {
   const svgString = `<?xml version="1.0" encoding="UTF-8" standalone="no"?>
@@ -75,11 +91,14 @@ async function promptUser() {
 
   const shapeInstance = createShapeInstance(shape);
   shapeInstance.setColor(shapeColor);
+  shapeInstance.setText(text);
+  shapeInstance.setTextColor(textColor);
 
-  const svgContent = `<svg width="300" height="200">
-    <text x="150" y="100" fill="${textColor}" text-anchor="middle">${text}</text>
-    ${shapeInstance.render()}
-  </svg>`;
+  const svgContent = `
+    <svg xmlns="http://www.w3.org/2000/svg" width="300" height="200">
+      ${shapeInstance.render()}
+    </svg>
+  `;
 
   createLogoFile(svgContent);
 }
@@ -98,5 +117,3 @@ function createShapeInstance(shape) {
 }
 
 promptUser();
-
-
