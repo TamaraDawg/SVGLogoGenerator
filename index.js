@@ -36,3 +36,61 @@ class Square extends Shape {
   }
 }
 
+
+function createLogoFile(svgContent) {
+  fs.writeFileSync('logo.svg', svgContent);
+  console.log('Generated logo.svg');
+}
+
+async function promptUser() {
+  const { text, textColor, shape, shapeColor } = await inquirer.prompt([
+    {
+      name: 'text',
+      message: 'Enter up to three characters:',
+      validate: (input) => input.length <= 3,
+    },
+    {
+      name: 'textColor',
+      message: 'Enter the text color:',
+      default: 'black',
+    },
+    {
+      name: 'shape',
+      message: 'Choose a shape:',
+      type: 'list',
+      choices: ['circle', 'triangle', 'square'],
+    },
+    {
+      name: 'shapeColor',
+      message: 'Enter the shape color:',
+      default: 'black',
+    },
+  ]);
+
+  const shapeInstance = createShapeInstance(shape);
+  shapeInstance.setColor(shapeColor);
+
+  const svgContent = `<svg width="300" height="200">
+    <text x="150" y="100" fill="${textColor}" text-anchor="middle">${text}</text>
+    ${shapeInstance.render()}
+  </svg>`;
+
+  createLogoFile(svgContent);
+}
+
+function createShapeInstance(shape) {
+  switch (shape) {
+    case 'circle':
+      return new Circle();
+    case 'triangle':
+      return new Triangle();
+    case 'square':
+      return new Square();
+    default:
+      throw new Error('Invalid shape');
+  }
+}
+
+promptUser();
+
+
